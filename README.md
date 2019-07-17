@@ -1,6 +1,6 @@
 # B2W-TEST
 
-# Utilização do Módulo
+## Utilização do Módulo
 
 clone esse repositório em seu diretório
 ```

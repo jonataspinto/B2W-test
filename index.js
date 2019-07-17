@@ -4,7 +4,7 @@ const cheerio = require("cheerio")
 function getProduct(url){
 
   let req = unirest("GET", url);
-
+// headers do postman
   req.headers({
     "cache-control": "no-cache",
     "Connection": "keep-alive",
@@ -22,30 +22,33 @@ req.end(res => {
   const $=cheerio.load(res.body)
 	
  	//Obter seletores do produto
-	let name = $("h1.product-name").text()
-	let id = $("span.product-id").text()
-	let price = $("p.sales-price").text()
-	let seller = $("div.seller-name-container span strong").text()
-	let img = $(".gallery-product a").attr("href")
+	let name = $("#product-name-default").text()
+	let id = $("span.brNcBx").text()
+	let price = $("p >.sales-price").text()
+	let seller = $(".gTAtJv> span.beNsgm").text()
+	let img = $("div.image-gallery-image> img").attr("src")
 	
 	let breadcrumb = []	
 	const breadcrumbItens = $(".product-breadcrumb > div")
 	
- 	//percorre e insere itens no array do breadcrumb
-	for(let i=0; i < breadcrumbItens.length; i++)
-	{
-		breadcrumb.push($(breadcrumbItens[i]).text())
-	}
+ 	// percorre e insere itens no array do breadcrumb
+	for(let i=0; i < breadcrumbItens.length; i++){
+		let element = $(breadcrumbItens[i]).text()
+		breadcrumb.push(element);
+	};
+
+	// breadcrumbItens.each(element =>{
+	// 	breadcrumb.push($(element).text())
+	// })
 	
- 	//Trata dados dos seletores
+ 	//tratamento dos dados retornados
 	id = id.substring(5,id.length -1)
 	id = parseInt(id)
 	price = price.substring(3)
 	price = price.replace(".","")
 	price = price.replace(",",".")
 	price = parseFloat(price)
-	
- 	//gera objeto para impressão
+		
 	const product = 
 	{
 		id,
@@ -59,9 +62,11 @@ req.end(res => {
 	console.log(product)
 });
 }
+// getProduct("https://www.americanas.com.br/produto/133718358/smart-tv-led-50-lg-50uk6510-ultra-hd-4k-com-conversor-digital-4-hdmi-2-usb-wi-fi-thinq-ai-webos-4-0-60hz-inteligencia-artificial-prata/")
 
+// getProduct("https://www.americanas.com.br/produto/45722972?DCSext.recom=RR_item_page.rr2-SessionPurchaseCP&nm_origem=rec_item_page.rr2-SessionPurchaseCP&nm_ranking_rec=1")
 
-getProduct("https://www.americanas.com.br/produto/133718358/smart-tv-led-50-lg-50uk6510-ultra-hd-4k-com-conversor-digital-4-hdmi-2-usb-wi-fi-thinq-ai-webos-4-0-60hz-inteligencia-artificial-prata/")
+// getProduct("https://www.americanas.com.br/produto/133756485?DCSext.recom=RR_item_page.rr1-ClickCP&nm_origem=rec_item_page.rr1-ClickCP&nm_ranking_rec=1")
 
-// // module.exports = getProduct
+module.exports = getProduct
 
